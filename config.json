@@ -1,0 +1,91 @@
+{
+    "serverURL": "https://playground.paramwallet.com:8005/",
+    "appKey": "acf7befbd2a13d19d4f1",
+    "dbServerUrl": "mongodb://param_user:itsP%40r%40m21@playground.paramwallet.com:27017",
+    "port": 4000,
+    "keyStoreBaseURL": {
+        "url": "https://keystore.paramwallet.com:5001/"
+    },
+    "fileUpload": "https://gprm.paramwallet.com:4003/",
+    "wallet-URL": "https://plaayground.paramwallet.com:5002",
+    "company_legal_name": "Hello,",
+    "domain": "ParamNetwork Enn",
+    "graph-utils": {
+        "url": "gprm.paramwallet.com",
+        "protocol": "https",
+        "websocket": "ws",
+        "ws-port": "4000",
+        "http-port": "4003"
+    },
+    "blockchain-payload": {
+        "docEntropyLength": 16
+    },
+    "plantTitleFormat": {
+        "splitCharacter": "-",
+        "indeces": [
+            "name",
+            "location"
+        ]
+    },
+    "html": {
+        "terms": "https://param.network/policies/term.html",
+        "policy": "https://param.network/policies/privacy_policy.html"
+    },
+    "oAuth": {
+        "getAllInvitations": "d/v1/invitations",
+        "updateInvitations": "d/v1/update_invitation",
+        "updateSettings": "d/v1/update_settings",
+        "getInfo": "d/v1/getInfo",
+        "addGSTN": "d/v1/add_gstn",
+        "getPlant": "d/v1/get_plant",
+        "addPlant": "d/v1/add_plant",
+        "sendInvitation": "d/v1/send_invitation",
+        "accept": "d/v1/accept",
+        "reject": "d/v1/reject",
+        "requesForAccess": "d/v1/request_for_access",
+        "verifyGSTN": "d/v1/verify_gstn",
+        "getAllGSTN": "d/v1/get_all_gstn",
+        "sendOTP": "d/v1/send_otp",
+        "verifyOTP": "d/v1/verify_otp",
+        "refreshToken": "d/v1/refresh_token",
+        "logout": "d/v1/logout",
+        "getParamId": "d/v1/getParamID",
+        "addMetaInfo": "d/v1/metaInfo",
+        "getAllUsers": "d/v1/getAlluser",
+        "addUser": "d/v1/add_user",
+        "updateStatus": "d/v1/update_user_status",
+        "sendTaxOTP": "d/v1/send_tax_otp",
+        "profile": "d/v1/profile",
+        "updatePlant": "d/v1/update_plant",
+        "addPlantUser": "d/v1/add_plant_user",
+        "getUserPlant": "d/v1/get_users_plant"
+    },
+    "PathConstants": {
+        "LOGIN": "/login",
+        "GSTNVALIDATION": "/gstn",
+        "GSTNOTPVALIDATION": "/gstn-validation",
+        "ADDPLANT": "/add-plant",
+        "REQUESTFORACCESS": "/request-for-access",
+        "GSTNSUCCESS": "/gstn/success",
+        "ENN": "/enn",
+        "ENNSIGNUP": "/sign-up",
+        "ENNSUCCESS": "/enn-success",
+        "INVITATION": "/invite",
+        "EXPLORE_ENN": "/explore-enn",
+        "DOMAIN": "/domain",
+        "ENN_VALIDATION": "/enn-validation",
+        "ENN_REGISTER": "/enn-register",
+        "HOME": "/"
+    },
+    "retryCount": 3,
+    "showNavBar": false,
+    "policies": "https://param.network/policies/term.html",
+    "offlineStatus": {
+        "title": "Network Status",
+        "content": "You're not connected to the internet",
+        "time": "",
+        "duration": 8000,
+        "status": true
+    },
+    "otp": "1234"
+}

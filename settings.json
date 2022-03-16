@@ -1,0 +1,9 @@
+{
+    "paramID": "paramID",
+    "publicKey": "publicKey",
+    "privateKey": "privateKey",
+    "appName": "appName",
+    "allPlants": "allPlants",
+    "selectedPlant": "selectedPlant"
+}
+  

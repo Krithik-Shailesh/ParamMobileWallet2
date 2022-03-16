@@ -1,0 +1,97 @@
+{
+    "tableColumns": [
+      {
+        "name": "PurchaseOrder",
+        "columns": [
+          "Date", "Order Number", "Parent Doc", "Seller Name", "Amount", "Status"
+        ]
+      }
+    ],
+    "tableData": [
+      [
+         "1234",
+        1509932.6,
+       1646031190363,
+         "",
+         "Nova",
+         "",
+         "0x41006f3683c3370f7b7fd57f89d404ba7dbb984dbc9add910d0d2b9f01123469",
+         ""
+      ],
+      [
+        "1234",
+       1509932.6,
+      1646031190363,
+        "",
+        "Nova",
+        "",
+        "0x41006f3683c3370f7b7fd57f89d404ba7dbb984dbc9add910d0d2b9f01123469",
+        ""
+     ],[
+      "1234",
+     1509932.6,
+    1646031190363,
+      "",
+      "Nova",
+      "",
+      "0x41006f3683c3370f7b7fd57f89d404ba7dbb984dbc9add910d0d2b9f01123469",
+      ""
+   ],[
+    "1234",
+   1509932.6,
+  1646031190363,
+    "",
+    "Nova",
+    "",
+    "0x41006f3683c3370f7b7fd57f89d404ba7dbb984dbc9add910d0d2b9f01123469",
+    ""
+ ]
+    ],
+    "indexes": {
+      "Buyer.C_LegalName": {
+        "title": "Buyer Name",
+        "dataType": "string",
+        "index": 400
+      },
+      "DocDetails.D_OrderNumber": {
+        "title": "Order Number",
+        "dataType": "string",
+        "index": 200
+      },
+      "DocDetails.D_TotalPaymentDueMinPrice": {
+        "title": "Amount",
+        "dataType": "number",
+        "index": 500
+      },
+      "DocDetails.D_OrderedDate": {
+        "title": "Date",
+        "dataType": "string",
+        "index": 100
+      },
+      "DocDetails.D_OrderStatus": {
+        "title": "Status",
+        "dataType": "string",
+        "index": 600
+      },
+      "Seller.C_LegalName": {
+        "title": "Seller Name",
+        "dataType": "string",
+        "index": 300
+      },
+      "ReferencesOrder.R_OrderNumber": {
+        "title": "Parent Doc",
+        "dataType": "string",
+        "index": 250
+      },
+      "_id": {
+        "title": "_id",
+        "dataType": "string",
+        "index": 0
+      },
+      "ReferencesOrder.R_Identifier": {
+        "title": "ReferencesOrder.R_Identifier",
+        "dataType": "string",
+        "index": 0
+      }
+    }
+  }
