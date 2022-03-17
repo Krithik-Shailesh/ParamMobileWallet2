@@ -55,28 +55,58 @@ class KeyStore {
       });
   }
 
+  getAllGSTN() {
+    let api = `${Config.oAuth.getAllGSTN}`;
+    return this.makeAPICall(api, "GET")
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(
+          "[ERROR] cannot fullfil API call, reason: ",
+          error.message
+        );
+        return Promise.reject(error);
+      });
+  }
+  
+  requestForAccessV1(body, admin) {
+    let options = {};
+    let api = Config.oAuth.requesForAccess;
+    Object.assign(options, { body, admin });
+    return this.makeAPICall(api, "POST", options).then((response) => {
+      return response;
+    }).catch((error) => {
+      console.error(
+        "[ERROR] cannot fullfil API call, reason: ",
+        error.message
+      );
+      return Promise.reject(error);
+    });
+  }
+
   refreshToken(refreshToken) {
     let options = {};
     let api = Config.oAuth.refreshToken;
     Object.assign(options, { refreshToken: refreshToken });
     return this.makeAPICall(api, "POST", options).then((response) => {
-        if (response && response.data && response.data.token && response.data.refreshToken) {
-            this.store.setToStorage("otpRefreshToken", response.data.refreshToken);
-            this.store.setToStorage("otpToken", response.data.token);
-            console.log("refreshToken", this.store.getFromStorage('otpRefreshToken'))
-            console.log("token", this.store.getFromStorage('otpToken'))
-            return response.status;
-        }
-        return Promise.reject("Unable to get token and refreshtoken!")
+      if (response && response.data && response.data.token && response.data.refreshToken) {
+        this.store.setToStorage("otpRefreshToken", response.data.refreshToken);
+        this.store.setToStorage("otpToken", response.data.token);
+        console.log("refreshToken", this.store.getFromStorage('otpRefreshToken'))
+        console.log("token", this.store.getFromStorage('otpToken'))
+        return response.status;
+      }
+      return Promise.reject("Unable to get token and refreshtoken!")
     }).catch((err) => {
-        if (err.status === 401 || err.status === 403) {
-            return Promise.reject(err);
-        }
+      if (err.status === 401 || err.status === 403) {
+        return Promise.reject(err);
+      }
     });
   }
 
   makeAPICall(api, method, options, count = 0) {
-    
+
     let endpoint = Config.keyStoreBaseURL.url + api;
     let request = {
       method: method,
@@ -87,36 +117,36 @@ class KeyStore {
       },
       body: JSON.stringify(options),
     }
-    if(api === 'd/v1/send_otp' || api === 'd/v1/verify_otp'){
-       return fetch(endpoint, request)
-      .then((response) => {
-        if (response.status === 401 || response.status === 403) {
-          return Promise.reject({ status: response.status });
-        }
-        if (response.status !== 200) {
-          return response.text().then((errorResponse) => {
-            throw new Error(JSON.parse(errorResponse).message);
-          });
-        }
-        return response.json();
-      })
-      .catch((err) => {
-        console.error("Error in keystore service, Reason: ", err);
-        // if (count < Config.retryCount) {
-        //   return this.makeAPICall(api, method, options, (count += 1));
-        // }
-        //return err;
-        return Promise.reject(err);
-      });
+    if (api === 'd/v1/send_otp' || api === 'd/v1/verify_otp') {
+      return fetch(endpoint, request)
+        .then((response) => {
+          if (response.status === 401 || response.status === 403) {
+            return Promise.reject({ status: response.status });
+          }
+          if (response.status !== 200) {
+            return response.text().then((errorResponse) => {
+              throw new Error(JSON.parse(errorResponse).message);
+            });
+          }
+          return response.json();
+        })
+        .catch((err) => {
+          console.error("Error in keystore service, Reason: ", err);
+          // if (count < Config.retryCount) {
+          //   return this.makeAPICall(api, method, options, (count += 1));
+          // }
+          //return err;
+          return Promise.reject(err);
+        });
     }
-    else{
-      
+    else {
+
       let token = this.store.getFromStorage("otpToken");
       request.headers.authorization = token;
-      
+
       return KeystoreUtils.getValidToken(token).then((res) => {
         request["headers"]["token"] = this.store.getFromStorage('otpToken');
-        return fetch(api, request);
+        return fetch(endpoint, request);
       }).then((response) => {
         if (response.ok) {
           return response.json();

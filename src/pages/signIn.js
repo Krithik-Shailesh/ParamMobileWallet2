@@ -3,7 +3,8 @@ import {
   SafeAreaView,
   View,
   Text,
-  Link
+  Link,
+  Dimensions
 } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import ParamConnector from '../libs/connector';
@@ -15,6 +16,10 @@ import { isValidEmail } from '../utils/index';
 const aesctr = require('../libs/utilities/aes-ctr')
 const crypto = require('crypto')
 
+const SCREEN_WIDTH = Dimensions.get('screen').width
+const SCREEN_HEIGHT = Dimensions.get('screen').height
+
+const heightPercent = parseInt((25/100)*SCREEN_HEIGHT)
 
 class SignIn extends Component {
 
@@ -207,7 +212,7 @@ class SignIn extends Component {
           mode="outlined"
           outlineColor="#6200ee"
           focused={true}
-          style={{ marginTop: "70%", borderRadius: 10, marginRight: 20, marginLeft: 20 }}
+          style={{ marginTop: heightPercent, borderRadius: 10, marginRight: 20, marginLeft: 20 }}
           label="Enter email id"
           placeholder="AC@example.com"
           onChangeText={(text) => this.changeEmailInputValue(text)}

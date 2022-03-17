@@ -18,7 +18,7 @@ import Storage from './libs/storage/utilities.js';
 import SignIn from './pages/signIn';
 import verifyOtp from './pages/verifyOtp';
 import DashBoard from './pages/dashBoard';
-import RequestForAccess from './pages/requestForAccess.js';
+import RequestForAccess from './pages/requestForAccess';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,9 +55,7 @@ class App extends Component {
       <NavigationContainer>
       <Stack.Navigator>
         { this.state.token == "" ? (
-        //<Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
-        <Stack.Screen name="RequestForAccess2" component={RequestForAccess} options={{headerShown: false}}/>
-        
+        <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
         ):
         (  
         // <Stack.Screen name="DirectDashBoard" component={DashBoard} />
