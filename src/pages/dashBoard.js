@@ -17,7 +17,7 @@ import Data from '../../data.json'
 class DashBoard extends Component{
 
     componentDidMount() {
-        this.getApps();   
+        this.getApps(); 
     }
     
     getApps = () =>  {
@@ -34,10 +34,8 @@ class DashBoard extends Component{
                 data = {Data.tableData}
                 colNames= {Data.tableColumns[0].columns}
                 /> */}
-                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-                <Row data={Data.tableColumns[0].columns} style = {{color: "black"}} textStyle = {{color: "black"}} />
-                <Rows data={Data.tableData} textStyle={{color: "black"}}/>
-                </Table>
+          
+                <Button title="Logout" onPress={() => { Storage.getInstance().clearStorage(), this.props.navigation.navigate('SignIn') }}></Button>
                 </ScrollView>
             </SafeAreaView>
         )

@@ -14,6 +14,8 @@ target 'ParamMobileWallet2' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'ParamMobileWallet2Tests' do
     inherit! :complete
     # Pods for testing
