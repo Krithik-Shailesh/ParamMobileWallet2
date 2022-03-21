@@ -8,38 +8,62 @@ import {
     TextInput,
     ScrollView
   } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 import ParamConnector from '../libs/connector';
 import Storage from '../libs/storage/utilities';
-import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-//import DataTable , {COL_TYPES} from 'react-native-datatable-component';
-//import DataTable from "react-data-table-component";
-import Data from '../../data.json'
+
 class DashBoard extends Component{
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            apps: []
+        }
+    }
+
     componentDidMount() {
-        this.getApps(); 
+        this.getApps().then(res => {
+            SplashScreen.hide()
+        })
     }
     
     getApps = () =>  {
         return ParamConnector.getInstance().getWalletService().getApps().then(res => {
-            console.log(res)
+            if(res){
+                this.setState({
+                    apps: res.response.data
+                })
+            }
         })
+    }
+
+    getAppsData = (data) => {
+        let appArr = []
+        for(let i=0;i<data.length;i++){
+            appArr.push(
+               <View style={{color: "black", margin: 20}}><Text style={{color:"black"}}>{data[i].Name+"\n"}</Text></View>
+            )
+        }
+        return appArr
     }
 
     render(){
         return(
             <SafeAreaView>
-                <ScrollView horizontal={true}>
-                {/* <DataTable 
-                data = {Data.tableData}
-                colNames= {Data.tableColumns[0].columns}
-                /> */}
-          
-                <Button title="Logout" onPress={() => { Storage.getInstance().clearStorage(), this.props.navigation.navigate('SignIn') }}></Button>
+                 <Text style={styles.text}>Welcome</Text>
+                <ScrollView>
+                {this.state.apps ? this.getAppsData(this.state.apps) : <></>}
+                <View style={{margin: 20}}><Button title="Settings" onPress={() => { this.props.navigation.navigate('Settings') }}></Button></View>
+                <View style={{margin: 20}}><Button title="Logout" onPress={() => { Storage.getInstance().clearStorage(), this.props.navigation.navigate('SignOut') }}></Button></View>
                 </ScrollView>
             </SafeAreaView>
         )
     }
 }
+const styles = StyleSheet.create({
+    text: {
+      fontFamily: "Montserrat-Bold"
+    }
+})
 
 export default DashBoard;

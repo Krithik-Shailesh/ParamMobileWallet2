@@ -19,6 +19,8 @@ import SignIn from './pages/signIn';
 import verifyOtp from './pages/verifyOtp';
 import DashBoard from './pages/dashBoard';
 import RequestForAccess from './pages/requestForAccess';
+import RequestForAccessSuccess from './pages/requestForAccessSuccess.js';
+import Settings from './pages/settings.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,13 +60,14 @@ class App extends Component {
         <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
         ):
         (  
-        // <Stack.Screen name="DirectDashBoard" component={DashBoard} />
-        <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
-
+        <Stack.Screen name="DirectDashBoard" component={DashBoard} />
         )
         }
-        {/* <Stack.Screen name="DashBoard" component={DashBoard} /> */}
-        <Stack.Screen name="RequestForAccess1" component={RequestForAccess} options={{headerShown: false}}/>
+        <Stack.Screen name="SignOut" component={SignIn} options={{headerShown: false}}/>
+        <Stack.Screen name="DashBoard" component={DashBoard} />
+        <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
+        <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess}/>
+        <Stack.Screen name="Settings" component={Settings}/>
       </Stack.Navigator>
     </NavigationContainer>
     </SafeAreaProvider>

@@ -25,20 +25,18 @@ class RequestForAccess extends Component {
             email: "",
             gstnList: [],
             plantOptions: [],
-            selectedPlant: "",
-            selectedPlantDetails: {},
+            
             loading: false,
             eventID: '',
             plantErrMsg: '',
         }
+        this.emailID = Storage.getInstance().getFromStorage('email')
+        this.domain = this.emailID ? this.emailID.split("@").pop().trim() : ""
+        this.selectedPlant= "",
+        this.selectedPlantDetails= {}
     }
 
     componentDidMount(){
-        let emailID = Storage.getInstance().getFromStorage('email')
-        let domain = emailID ? emailID.split("@").pop().trim() : ""
-        this.setState({
-            domain
-        })
         this.getAllGSTN()
     }
     
@@ -82,7 +80,8 @@ class RequestForAccess extends Component {
     }
 
     onButtonPress = () => {
-            const { selectedPlantDetails, selectedPlant } = this.state;
+            const selectedPlantDetails = this.selectedPlantDetails
+            const selectedPlant  = this.selectedPlant;
             if (!selectedPlant || !selectedPlantDetails) {
                 return;
             }
@@ -118,6 +117,11 @@ class RequestForAccess extends Component {
         return `${username[0]}${new Array(username.length).join("*")}@${userdomain}`;
     }
 
+    onSelectPress = (label, value) => {
+        this.selectedPlant = label
+        this.selectedPlantDetails = value
+    }
+
     getPlantList = (plants) => {
         let ListItemsArr = []
         for(let i =0 ;i<plants.length;i++){
@@ -125,10 +129,7 @@ class RequestForAccess extends Component {
                 <List.Item 
                 style={{color: 'black'}} 
                 title = {plants[i].label} 
-                onPress = {this.setState({
-                    selectedPlant: plants[i].label,
-                    selectedPlantDetails: plants[i].value
-                })}
+                onPress = {() => {this.onSelectPress(plants[i].label, plants[i].value)}}
                 />
             )
         }
@@ -139,8 +140,8 @@ class RequestForAccess extends Component {
         return (
             <SafeAreaView>
                 <ScrollView>
-                <View style={{marginLeft: 20,  marginTop: heightPercent, marginRight: 20}} >
-                    <Text style={{color: "black", fontSize: 30}}>{this.state.domain} is already registered and may have multiple plants. Please select the plant for access request.</Text>
+                <View style={{marginLeft: 20,  marginTop: heightPercent-200, marginRight: 20}} >
+                    <Text style={{color: "black", fontSize: 30}}>{this.domain} is already registered and may have multiple plants. Please select the plant for access request.</Text>
                 </View>
                 <List.Section style={{color: "#6200ee", margin: 20, borderRadius: 50}}>
                     <List.Accordion
@@ -148,7 +149,7 @@ class RequestForAccess extends Component {
                         {this.getPlantList(this.state.plantOptions)}
                     </List.Accordion>
                 </List.Section>
-            <View style={{ margin: 20 }}><Button style={{ height: 50, justifyContent: "center" }} mode="contained" onPress={() => {this.verifyOTP() }} >Login</Button></View>
+            <View style={{ margin: 20 }}><Button style={{ height: 50, justifyContent: "center" }} mode="contained" onPress={() => {this.onButtonPress()}} >Continue</Button></View>
             </ScrollView>
             </SafeAreaView>
         )

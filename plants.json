@@ -1,0 +1,44 @@
+{
+    "index": 300,
+    "title": "Add Plant",
+    "properties": {
+        "taxID": {
+            "type": "string",
+            "title": "Tax ID",
+            "index": 3600
+        },
+        "plantCode": {
+            "type": "string",
+            "title": "Plant Code",
+            "index": 3600
+        },
+        "plantName": {
+            "type": "string",
+            "title": "Plant Name",
+            "index": 3600
+        },
+        "location": {
+            "type": "string",
+            "title": "Location",
+            "index": 3600
+        },
+        "phoneNumber": {
+            "type": "string",
+            "title": "Phone Number",
+            "index": 3600
+        },
+        "emailID": {
+            "type": "string",
+            "title": "Email ID",
+            "index": 3600
+        }
+    },
+    "required": [
+        "taxID",
+        "plantCode",
+        "plantName",
+        "location",
+        "phoneNumber",
+        "emailID"
+    ]
+}

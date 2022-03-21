@@ -1,5 +1,4 @@
-import { TestScheduler } from "jest";
-import MMKV from ".";
+import MMKV from "./index";
 
 class Storage{
 

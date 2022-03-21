@@ -1,0 +1,241 @@
+{
+    "data": {
+        "_id": "public:0x60107bcb5683fa2adb8d0ed41b3a9a99bc08ae54a176caadc761ae34b137b5c9",
+        "required": [
+            "Contact",
+            "AdditionalProperties"
+        ],
+        "indexes": [
+            "Profile",
+            "Contact",
+            "BankDetails",
+            "AdditionalProperties"
+        ],
+        "order": [
+            "Profile",
+            "Contact",
+            "BankDetails",
+            "AdditionalProperties"
+        ],
+        "name": "Profile",
+        "type": "object",
+        "properties": {
+            "groups": {
+                "index": 500,
+                "title": "Group",
+                "items": [
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "string"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ],
+                "type": "array"
+            },
+            "Contact": {
+                "required": [
+                    "C_Email",
+                    "C_Organization",
+                    "C_TaxID",
+                    "C_Country"
+                ],
+                "indexes": [
+                    "C_Description",
+                    "C_Telephone",
+                    "C_Email",
+                    "C_Organization",
+                    "C_StreetAddress",
+                    "C_AddressLocality",
+                    "C_City",
+                    "C_TaxID",
+                    "C_Department",
+                    "C_Region",
+                    "C_PostalCode",
+                    "C_Country"
+                ],
+                "order": [
+                    "C_Organization",
+                    "C_TaxID",
+                    "C_StreetAddress",
+                    "C_AddressLocality",
+                    "C_City",
+                    "C_Region",
+                    "C_PostalCode",
+                    "C_Country",
+                    "C_Description",
+                    "C_Department",
+                    "C_Email",
+                    "C_Telephone"
+                ],
+                "type": "object",
+                "index": 100,
+                "title": "Organization",
+                "properties": {
+                    "C_City": {
+                        "type": "string",
+                        "title": "City",
+                        "index": 150
+                    },
+                    "C_Email": {
+                        "title": "Email",
+                        "index": 130,
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "C_Identifier": {
+                        "index": 1,
+                        "type": "string",
+                        "title": "Param ID"
+                    },
+                    "C_PostalCode": {
+                        "title": "Postal Code",
+                        "index": 170,
+                        "type": "string"
+                    },
+                    "C_Region": {
+                        "type": "string",
+                        "title": "State",
+                        "index": 165
+                    },
+                    "C_Telephone": {
+                        "index": 125,
+                        "type": "string",
+                        "title": "Telephone"
+                    },
+                    "C_Department": {
+                        "title": "Department",
+                        "index": 160,
+                        "type": "string"
+                    },
+                    "C_Organization": {
+                        "type": "string",
+                        "title": "Organization",
+                        "index": 135
+                    },
+                    "C_Description": {
+                        "index": 120,
+                        "type": "string",
+                        "title": "Description"
+                    },
+                    "C_StreetAddress": {
+                        "index": 140,
+                        "type": "string",
+                        "title": "Street Address"
+                    },
+                    "C_Country": {
+                        "index": 175,
+                        "type": "string",
+                        "title": "Country"
+                    },
+                    "C_TaxID": {
+                        "title": "Tax ID",
+                        "index": 155,
+                        "type": "string"
+                    },
+                    "C_AddressLocality": {
+                        "type": "string",
+                        "title": "Address Locality",
+                        "index": 145
+                    }
+                }
+            },
+            "BankDetails": {
+                "order": [
+                    "C_BankName",
+                    "C_BankAccount",
+                    "C_IfscCode",
+                    "C_Branch",
+                    "C_BankAddress"
+                ],
+                "type": "object",
+                "index": 200,
+                "title": "Bank Details",
+                "properties": {
+                    "C_Branch": {
+                        "title": "Branch",
+                        "index": 240,
+                        "type": "string"
+                    },
+                    "C_BankAddress": {
+                        "index": 250,
+                        "type": "string",
+                        "title": "Bank Address"
+                    },
+                    "C_BankName": {
+                        "title": "Bank Name",
+                        "index": 210,
+                        "type": "string"
+                    },
+                    "C_BankAccount": {
+                        "index": 220,
+                        "type": "string",
+                        "title": "Bank Account"
+                    },
+                    "C_IfscCode": {
+                        "type": "string",
+                        "title": "IFSC Code",
+                        "index": 230
+                    }
+                },
+                "required": [],
+                "indexes": [
+                    "C_BankName",
+                    "C_BankAccount",
+                    "C_IfscCode",
+                    "C_Branch",
+                    "C_BankAddress"
+                ]
+            },
+            "AdditionalProperties": {
+                "type": "object",
+                "title": "Additional Properties",
+                "index": 300,
+                "properties": {}
+            },
+            "Profile": {
+                "title": "Profile",
+                "properties": {
+                    "P_LegalName": {
+                        "title": "Name",
+                        "index": 120,
+                        "type": "string"
+                    },
+                    "P_Email": {
+                        "type": "string",
+                        "title": "Email",
+                        "index": 130
+                    },
+                    "P_Telephone": {
+                        "index": 140,
+                        "type": "string",
+                        "title": "Telephone"
+                    }
+                },
+                "required": [
+                    "P_LegalName",
+                    "P_Email",
+                    "P_Telephone"
+                ],
+                "indexes": [
+                    "P_LegalName",
+                    "P_Email",
+                    "P_Telephone"
+                ],
+                "order": [
+                    "P_LegalName",
+                    "P_Email",
+                    "P_Telephone"
+                ],
+                "type": "object",
+                "index": 200
+            }
+        }
+    }
+}
