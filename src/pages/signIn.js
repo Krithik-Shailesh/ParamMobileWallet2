@@ -5,7 +5,8 @@ import {
   Text,
   Pressable,
   Dimensions,
-  StyleSheet
+  StyleSheet,
+  KeyboardAvoidingView
 } from 'react-native';
 import { TextInput, Button, Divider } from 'react-native-paper';
 import ParamConnector from '../libs/connector';
@@ -16,6 +17,7 @@ import { isValidEmail } from '../utils/index';
 import SplashScreen from 'react-native-splash-screen'
 import Logo from '../../assets/logo.svg'
 import * as Style from '../styles/index'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const aesctr = require('../libs/utilities/aes-ctr')
 const crypto = require('crypto')
@@ -23,7 +25,7 @@ const crypto = require('crypto')
 const SCREEN_WIDTH = Dimensions.get('screen').width
 const SCREEN_HEIGHT = Dimensions.get('screen').height
 
-const heightPercent = parseInt((25/100)*SCREEN_HEIGHT)
+const heightPercent = parseInt((25 / 100) * SCREEN_HEIGHT)
 
 class SignIn extends Component {
 
@@ -40,17 +42,16 @@ class SignIn extends Component {
     }
     //this.onButtonPress = this.onButtonPress.bind(this)
     this.store = Storage.getInstance()
-    
+
   }
 
-  componentDidMount(){
+  componentDidMount() {
     SplashScreen.hide()
   }
 
   changeEmailInputValue = (emailInput) => {
     this.setState({
       email: emailInput,
-      
     })
   }
 
@@ -59,15 +60,15 @@ class SignIn extends Component {
 
     setTimeout(() => {
       this.setState({
-        timer: time-1
-      }) 
+        timer: time - 1
+      })
     }, 1000);
-    
+
     return time
   }
 
   validEmail = (email) => {
-   
+
     let validEmail = isValidEmail(email)
     this.setState({
       validEmail: validEmail
@@ -84,27 +85,46 @@ class SignIn extends Component {
     let Store = this.store
     let email = this.state.email
     email = email.toLowerCase().trim();
+    this.countDown()
+    this.setState({
+      resend: true
+    })
 
     Store.setToStorage('emailID', email)
     return ParamConnector.getInstance().getKeyStoreService().sendOTP(email)
       .then(res => {
         // this.props.navigation.navigate('VerifyOTP',{email: email})
-        this.countDown()
-        this.setState({
-          resend: true
-        })
+
+      })
+
+  }
+
+  reSendOTP = () => {
+    let Store = this.store
+    let email = this.state.email
+    email = email.toLowerCase().trim();
+    this.setState({
+      timer: 59
+    })
+    
+
+    Store.setToStorage('emailID', email)
+    return ParamConnector.getInstance().getKeyStoreService().sendOTP(email)
+      .then(res => {
+        // this.props.navigation.navigate('VerifyOTP',{email: email})
+
       })
 
   }
 
   verifyOTP = () => {
     let Store = this.store
-    
+
     let email = this.state.email;
     email = email.toLowerCase().trim();
     let OTP = this.state.otp;
     let isTermsAndConditionVerified = true;
-    
+
     return ParamConnector.getInstance().getKeyStoreService().verifyOTP(email, OTP, isTermsAndConditionVerified).then(res => {
 
       if (res.status) {
@@ -174,7 +194,7 @@ class SignIn extends Component {
             this.setState({
               requestForAccess: true
             })
-          	this.props.navigation.navigate('RequestForAccess')
+            this.props.navigation.navigate('RequestForAccess')
           }
           let taxInfo = currentApp.taxInfo[0]
           Store.setToStorage("taxID", currentApp.taxInfo[0].taxID)
@@ -208,7 +228,7 @@ class SignIn extends Component {
               }
               let plantObj = { name, ID, paramID, location: plantLocation }
               allPlants.push(plantObj)
-              let plantCode = ""+plants[i].plantCode
+              let plantCode = "" + plants[i].plantCode
               Store.setToStorage(plantCode, plantObj)
             }
             Store.setToStorage('allPlants', allPlants)
@@ -218,7 +238,7 @@ class SignIn extends Component {
             let role = Storage.getInstance().getFromStorage('role')
             if (role !== 1) {
               if (plants && plants[0] || selectedPlant) {
-                this.props.navigation.navigate('DashBoard')
+                this.props.navigation.navigate('PlantListing')
               }
             }
           }
@@ -241,18 +261,18 @@ class SignIn extends Component {
               this.setState({
                 requestForAccess: true
               })
-            this.props.navigation.navigate('RequestForAccess')
+              this.props.navigation.navigate('RequestForAccess')
             }
           }).catch(err => {
             console.log('[ERROR]', err)
           })
         }
         if (plants && plants[0] || selectedPlant) {
-          this.props.navigation.navigate('DashBoard')
+          this.props.navigation.navigate('PlantListing')
         }
         return
       }
-      else{
+      else {
         this.setState({
           errorOtp: true
         })
@@ -264,54 +284,66 @@ class SignIn extends Component {
         email: "",
         otp: ""
       })
-      if(this.state.requestForAccess === true && this.state.errorOtp === false){
+      if (this.state.requestForAccess === true && this.state.errorOtp === false) {
         this.props.navigation.navigate('RequestForAccess')
       }
-      else{
-        this.props.navigation.navigate('DashBoard')
+      else {
+        this.props.navigation.navigate('PlantListing')
       }
     })
 
   }
   render() {
     return (
-      <SafeAreaView style={{marginLeft: 20, marginRight: 20}}>
-        <View style={styles.logo}><Logo></Logo></View>
-        <View style={{marginTop: "20%"}}>
-        <Text style={styles.welcomeText}>Welcome to </Text>
-        <Text style={styles.welcomeText}>⦃param⦄.network</Text>
+      <ScrollView>
+      <KeyboardAvoidingView style={{ flex: 1, flexDirection: 'column',justifyContent: 'center',}} behavior="height" enabled   keyboardVerticalOffset={20}>
+      <SafeAreaView style={{ marginLeft: 20, marginRight: 20 }}>
+        <View style={{...styles.logo}}><Logo></Logo></View>
+        <View style={{ marginTop: "20%" }}>
+          <Text style={styles.welcomeText}>Welcome to </Text>
+          <Text style={styles.welcomeText}>⦃param⦄.network</Text>
         </View>
-        <View style={{marginTop: "20%"}}>
-        <TextInput
-          mode="outlined"
-          outlineColor="#9F84C2"
-          focused={true}
-          style={{  borderRadius: 10}}
-          label="Enter email id"
-          placeholder="AC@example.com"
-          onChangeText={(text) => this.changeEmailInputValue(text)}
-          onEndEditing = {(text) => this.validEmail(text.nativeEvent.text)}
-          value={this.state.email}
-        />
-        {this.state.validEmail === false ? <Text style={{color: "red"}}>Enter a valid email!</Text> : <></>}
-        <TextInput
-          mode="outlined"
-          outlineColor="#9F84C2"
-          style={{marginTop: 20,marginBottom:44,  borderRadius: 5}}
-          label="Enter OTP"
-          placeholder="ne2LMDj3"
-          onChangeText={(text) => { this.changeOTPInputValue(text) }}
-          value={this.state.otp}
-          inputAccessoryViewID={"ggg"}
-          right={this.state.resend === false ? <TextInput.Icon name={() =>  <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} /> } style={{ marginRight: 20 }} onPress={() => { this.sendOTP() }} /> : this.state.timer !== 0 ? <TextInput.Affix text={`00:${this.countDown()}`} textStyle={{color: Style.primary_color}}/> : <TextInput.Affix text={"Resend Code"} textStyle={{color: "#101047"}} onPress={() => {this.sendOTP()}}/> }
-        />
+        <View style={{ marginTop: "20%" }}>
+          <TextInput
+            mode="outlined"
+            outlineColor="#9F84C2"
+            activeOutlineColor='#9F84C2'
+            focused={true}
+            style={{borderRadius: 10 }}
+            fontFamily= "Montserrat-Regular"
+            theme={{ fonts: { regular: "Montserrat-Regular" } }}
+            label="Enter email id"
+            placeholder="AC@example.com"
+            onChangeText={(text) => this.changeEmailInputValue(text)}
+            onEndEditing={(text) => this.validEmail(text.nativeEvent.text)}
+            value={this.state.email}
+          />
+          {this.state.validEmail === false ? <Text style={{ color: "red" }}>Enter a valid email!</Text> : <></>}
+          <TextInput
+            mode="outlined"
+            outlineColor="#9F84C2"
+            activeOutlineColor='#9F84C2'
+            style={{ fontFamily: "Montserrat-Regular",marginTop: 20, marginBottom: 44, borderRadius: 5 }}
+            label="Enter OTP"
+            placeholder="OTP"
+            onChangeText={(text) => { this.changeOTPInputValue(text) }}
+            value={this.state.otp}
+            inputAccessoryViewID={"ggg"}
+            right={this.state.resend === false ? <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.sendOTP() }} /> : this.state.timer !== 0 ? <TextInput.Affix text={`00:${this.countDown()}`} textStyle={{ color: Style.primary_color }} /> : <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.reSendOTP() }} />}
+          />
         </View>
-        {this.state.errorOtp === true ? <Text style={{color: "red"}}>Invalid OTP!</Text> : <></>}
-        <Divider style={{color: "#EBEBEB"}}/>
+        {this.state.errorOtp === true ? <Text style={{ color: "red" }}>Invalid OTP!</Text> : <></>}
+        <Divider style={{ color: "#EBEBEB" }} />
         {/* <Text style={{ color: "#6200ee", marginTop: 30 }}>Didn't get a verification code?  <Text style={{ textDecorationLine: 'underline' }} onPress={() => { this.sendOTP() }}>Resend</Text></Text> */}
-        <View style={{ marginTop: 26}}><Button style={{ height: 50, justifyContent: "center", backgroundColor: Style.primary_color }} mode="contained" onPress={() => {this.verifyOTP() }} >Login</Button></View>
-        
+        <View style={{ marginTop: 26 , marginBottom: "10%"}}><Button style={{ height: 50, justifyContent: "center", backgroundColor: Style.primary_color }} mode="contained" onPress={() => { this.verifyOTP() }} >Login</Button></View>
+        <View style={{alignItems: 'center', left: 0, right: 0, bottom: "5%", marginTop: "20%"}}>
+        <Text style={{fontSize: 12}}>Registration means that you agree to</Text>
+        <Text style={{fontSize: 12}}>⦃param⦄.network User Agreement & User Privacy</Text></View>
       </SafeAreaView>
+      </KeyboardAvoidingView>
+      </ScrollView>
+      
+      
     );
   }
 
@@ -327,7 +359,7 @@ const styles = StyleSheet.create({
     marginTop: "20%"
   },
   welcomeText: {
-    fontFamily: "Montserrat-Bold",
+    fontFamily: "Montserrat-Regular",
     fontSize: 32,
     color: "black"
   }

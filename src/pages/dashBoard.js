@@ -53,6 +53,7 @@ class DashBoard extends Component{
                  <Text style={styles.text}>Welcome</Text>
                 <ScrollView>
                 {this.state.apps ? this.getAppsData(this.state.apps) : <></>}
+                <View style={{margin: 20}}><Button title="PlantListing" onPress={() => { this.props.navigation.navigate('PlantListing') }}></Button></View>
                 <View style={{margin: 20}}><Button title="Settings" onPress={() => { this.props.navigation.navigate('Settings') }}></Button></View>
                 <View style={{margin: 20}}><Button title="Logout" onPress={() => { Storage.getInstance().clearStorage(), this.props.navigation.navigate('SignOut') }}></Button></View>
                 </ScrollView>

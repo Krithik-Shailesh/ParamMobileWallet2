@@ -21,6 +21,7 @@ import DashBoard from './pages/dashBoard';
 import RequestForAccess from './pages/requestForAccess';
 import RequestForAccessSuccess from './pages/requestForAccessSuccess.js';
 import Settings from './pages/settings.js';
+import PlantListing from './pages/plantListing.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,14 +57,15 @@ class App extends Component {
       <SafeAreaProvider>
       <NavigationContainer>
       <Stack.Navigator>
-        { this.state.token == "" ? (
+        { this.state.token == "" ? (        
         <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
         ):
-        (  
+        ( 
         <Stack.Screen name="DirectDashBoard" component={DashBoard} />
         )
         }
         <Stack.Screen name="SignOut" component={SignIn} options={{headerShown: false}}/>
+        <Stack.Screen name="PlantListing" component={PlantListing} options={{headerShown: false}}/> 
         <Stack.Screen name="DashBoard" component={DashBoard} />
         <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
         <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess}/>

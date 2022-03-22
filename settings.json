@@ -4,6 +4,9 @@
     "privateKey": "privateKey",
     "appName": "appName",
     "allPlants": "allPlants",
-    "selectedPlant": "selectedPlant"
+    "selectedPlant": "selectedPlant",
+    "orgName": "orgName",
+    "selectedPlantName": "selectedPlantName",
+    "selectedPlantLocation": "selectedPlantLocation"
 }
   

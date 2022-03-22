@@ -27,11 +27,25 @@ class Utils {
         }
     }
 
+    static getFromStorage(key) {
+        return Storage.getInstance().getFromStorage(key)
+    }
+
+    static setToStorage(key, value){
+        Storage.getInstance().setToStorage(key, value)
+    }
+
     static getHashedData(data) {
         if (!data || data === "") {
             return null;
         }
         return Crypto.createHash('sha256').update(data).digest('hex')
+    }
+
+    static serializeURLParameters(obj) {
+        return Object.keys(obj)
+            .map((key) => `${key}=${encodeURIComponent(obj[key])}`)
+            .join('&')
     }
 
     static checkForSameDomain(domain) {

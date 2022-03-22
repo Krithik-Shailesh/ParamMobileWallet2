@@ -1,7 +1,7 @@
 import Config from "../../../../config.json";
 import Storage from "../../storage/utilities";
 import KeystoreUtils from "./utils";
-
+import Utils from "../../utilities";
 class KeyStore {
   constructor() {
     this.store = Storage.getInstance();
@@ -69,7 +69,26 @@ class KeyStore {
         return Promise.reject(error);
       });
   }
-  
+
+  getMetaData(email) {
+    let api = Config.oAuth.addMetaInfo;
+    let params = Utils.serializeURLParameters({
+      id: email,
+    });
+    api = api + `?${params}`;
+    return this.makeAPICall(api, "GET")
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        console.error(
+          "[ERROR] cannot fullfil API call, reason: ",
+          error.message
+        );
+        return Promise.reject(error);
+      });
+  }
+
   requestForAccessV1(body, admin) {
     let options = {};
     let api = Config.oAuth.requesForAccess;
