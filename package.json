@@ -84,6 +84,7 @@
     "react-test-renderer": "17.0.2",
     "rn-nodeify": "github:tradle/rn-nodeify"
   },
+  "rnpm": { "assets": [ "resources/fonts" ] },
   "jest": {
     "preset": "react-native"
   },

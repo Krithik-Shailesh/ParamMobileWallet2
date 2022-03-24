@@ -3,23 +3,17 @@ import {
     SafeAreaView,
     View,
     Text,
-    Pressable,
-    Dimensions,
-    StyleSheet,
-    KeyboardAvoidingView
+    StyleSheet
 } from 'react-native';
-import { TextInput, Button, Divider, List } from 'react-native-paper';
+import { Button, List } from 'react-native-paper';
 import ParamConnector from '../libs/connector';
-import Storage from '../libs/storage/utilities';
 import Utils from '../libs/utilities';
 import Settings from '../../settings.json';
-import SplashScreen from 'react-native-splash-screen'
 import { convertToDoubleStruck } from '../utils/fontstyle';
-import { type } from 'os';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Logo from '../../assets/logo.svg'
+
+
 import PlantModal from '../components/plantModal';
-import * as Style from '../styles/index'
+import LoginComponent from '../components/loginComponent';
 
 class PlantListing extends Component {
 
@@ -28,17 +22,50 @@ class PlantListing extends Component {
         this.state = {
             data: [],
             modal: false,
-            location: ""
+            location: "",
+            allPlants: []
         }
-        this.allPlants = Utils.getFromStorage('allPlants')
+
 
     }
 
     componentDidMount() {
-        this.getProfile()
+        this.getAllGSTN()
+            .then(res => {
+                this.getProfile()
+                this.setState({
+                    allPlants: Utils.getFromStorage(Settings.allPlants)
+                })
+            })
 
     }
 
+    getAllGSTN = () => {
+        return ParamConnector.getInstance().getKeyStoreService().getAllGSTN().then(res => {
+            if (!res || !res.status) {
+                return Promise.reject("Error in getAllGSTN")
+            }
+            if (res.data && res.data.taxInfo && res.data.taxInfo.length !== 0) {
+                let plants = res.data.taxInfo[0].taxInfo[0].plants
+                Utils.setToStorage(Settings.allPlantDetails, plants)
+                let plantsArr = []
+                for (let i = 0; i < plants.length; i++) {
+                    let plantObj = {}
+                    plantObj.paramID = plants[i].keyStore["ethID"]
+                    plantObj.ID = plants[i].plantCode
+                    plantObj.taxID = plants[i].taxID
+                    plantObj.plantName = plants[i].plantName
+                    plantObj.location = plants[i].location
+                    plantsArr.push(plantObj)
+                    Utils.setToStorage(plants[i].plantCode, plants[i])
+                }
+
+                Utils.setToStorage(Settings.allPlants, plantsArr)
+                Utils.setToStorage(Settings.selectedPlant, plantsArr[0])
+            }
+        }
+        )
+    }
     getProfile = () => {
         let email = Utils.getFromStorage("email")
 
@@ -75,7 +102,6 @@ class PlantListing extends Component {
     }
 
     toggleModal = () => {
-        console.log(Utils.getFromStorage(Settings.selectedPlant), Utils.getFromStorage(Settings.selectedPlantName))
         this.setState({
             modal: true
         })
@@ -94,49 +120,50 @@ class PlantListing extends Component {
     }
 
     render() {
+        let data = this.state.allPlants ? this.state.allPlants : []
         let penID = this.state.data && this.state.data[0] && this.state.data[0]["C_PenID"] ? this.state.data[0]["C_PenID"] : <></>
 
         let penID1 = penID && penID.length > 0 && penID.substring(0, penID.length / 2)
         let penID2 = penID && penID.length > 0 && penID.substring(penID.length / 2)
-        let name = this.state.data && this.state.data[0] && this.state.data[0].Profile["P_LegalName"] ? this.state.data[0].Profile["P_LegalName"] : <></>
+        let name = Utils.getFromStorage(Settings.orgName)//this.state.data && this.state.data[0] && this.state.data[0].Profile["P_LegalName"] ? this.state.data[0].Profile["P_LegalName"] : <></>
         return (
-            <SafeAreaView style={{ flex: 1 }}>
-                <View style={{ marginTop: 30, marginHorizontal: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Pressable onPress={() => {this.props.navigation.goback()}}><View><MaterialCommunityIcons name="arrow-left" size={40} color="black" /></View></Pressable>
-                    <View style={{ marginTop: 5, height: 20 }}><Logo></Logo></View>
-                </View>
-                <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+            <SafeAreaView>
+                <LoginComponent />
+
+                <SafeAreaView style={{ alignItems: 'center' }}>
                     <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
                         <Text style={style.avatar}>{penID1 && convertToDoubleStruck(penID1)}</Text>
                         <Text style={style.avatar}>{penID2 && convertToDoubleStruck(penID2)}</Text>
                     </View>
-                    <View ><Text style={style.name}>{name}</Text></View>
+                    <View><Text style={style.name}>{name}</Text></View>
                 </SafeAreaView>
+
                 <List.Section style={style.select}>
                     <List.Accordion
-                        titleStyle={{fontFamily: "Montserrat-Regular", color: '#484848'}}
+                        titleStyle={style.accordianTitle}
                         title={this.state.location ? this.state.location : "Choose a Plant"}
-                        style={{padding: 15, color: '#484848' }}
+                        style={{ padding: 15, color: '#484848' }}
                         onPress={this.toggleModal}
                     >
                     </List.Accordion>
                 </List.Section>
-                <View style={style.divider} />
-                <View style={{ marginBottom: 40, marginHorizontal: 26}}><Button style={{ height: 50, justifyContent: "center", backgroundColor:  "#542493"}} mode="contained" onPress={() => { this.props.navigation.navigate('DashBoard') }} >Login</Button></View>
+                <View style={{...style.divider}} />
+                <View style={{ marginBottom: 40, marginHorizontal: 26 }}><Button style={{ height: 50, justifyContent: "center", backgroundColor: "#542493" }} mode="contained" onPress={() => { this.props.navigation.navigate('RequestForAccess', { plantLocation: this.state.location}) }} >Continue</Button></View>
 
                 {/* {this.state.modal === true ? <PlantModal title ="Choose a Plant" data={this.allPlants} open={this.state.modal}/> : <></>} */}
                 <PlantModal
                     title="Choose a Plant"
-                    data={this.allPlants}
+                    data={data}
                     open={this.state.modal}
                     updateModalState={this.updateModalState}
                     selectedPlant={this.updateSelectedPlant}
                 />
-                <View style={{alignItems: 'center', left: 0, right: 0, bottom: "5%", marginTop: "20%"}}>
-        <Text style={{fontSize: 12}}>Registration means that you agree to</Text>
-        <Text style={{fontSize: 12}}>⦃param⦄.network User Agreement & User Privacy</Text></View>
-        </SafeAreaView>
-            
+                <View style={{...style.footerContainer}}>
+                    <Text style={style.footer}>Registration means that you agree to</Text>
+                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
+                </View>
+            </SafeAreaView>
+
         )
     }
 }
@@ -150,7 +177,7 @@ const style = StyleSheet.create({
         borderRadius: 122 / 2,
         backgroundColor: "#F8F5FF",
         borderColor: "#E6DBFF",
-        borderWidth: 2
+        borderWidth: 2,
     },
     avatar: {
         fontFamily: 'Montserrat-Bold',
@@ -158,15 +185,16 @@ const style = StyleSheet.create({
         color: "#542493"
     },
     name: {
-        fontFamily: "Montserrat-Regilar",
+        fontFamily: "Montserrat-Regular",
         fontSize: 28,
         marginTop: 20,
         color: "#0D0D0D",
-        marginBottom: 10
+        marginBottom: 10,
+        padding: 10
     },
     select: {
         color: "#9F84C2",
-        marginTop: 40,
+        marginTop: 30,
         marginBottom: 60,
         borderRadius: 5,
         marginHorizontal: 34,
@@ -179,7 +207,23 @@ const style = StyleSheet.create({
         borderBottomColor: "#C4C4C4",
         borderBottomWidth: 0.2,
         marginHorizontal: 26,
-        marginBottom:26
+        marginBottom: 26
+    },
+    footer: {
+        fontSize: 12,
+        fontFamily: "Montserrat-Regular"
+    },
+    footerContainer: {
+        alignItems: 'center',
+        left: 0,
+        right: 0,
+        bottom: "5%",
+        marginTop: "20%"
+    },
+    accordianTitle: { 
+        fontFamily: "Montserrat-Regular", 
+        color: '#484848' 
     }
+
 })
 export default PlantListing;

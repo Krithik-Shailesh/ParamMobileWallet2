@@ -7,6 +7,7 @@
     "selectedPlant": "selectedPlant",
     "orgName": "orgName",
     "selectedPlantName": "selectedPlantName",
-    "selectedPlantLocation": "selectedPlantLocation"
+    "selectedPlantLocation": "selectedPlantLocation",
+    "allPlantDetails": "allPlantDetails"
 }
   

@@ -48,6 +48,7 @@ class PlantModal extends Component {
 
         return (
             <Modal
+                animated
                 animationType="slide"
                 transparent={true}
                 visible={this.props.open}
@@ -61,7 +62,10 @@ class PlantModal extends Component {
                         backgroundColor: 'white'
                     }}>
                     <View style={{ marginLeft: 17, marginTop: 26 }}>
+                        <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
                         <View><Text style={styles.title}>{this.props.title}</Text></View>
+                        <Pressable style={{marginRight: 15}}onPress={() => {this.setModalState()}}><Text>Close</Text></Pressable>
+                        </View>
                         <FlatList
                             data={Data}
                             keyExtractor={item => item.ID}

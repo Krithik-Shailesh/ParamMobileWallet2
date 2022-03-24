@@ -61,14 +61,15 @@ class App extends Component {
         <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
         ):
         ( 
-        <Stack.Screen name="DirectDashBoard" component={DashBoard} />
+
+        <Stack.Screen name="DirectDashBoard" component={DashBoard} options={{headerShown: false}}/>
         )
         }
         <Stack.Screen name="SignOut" component={SignIn} options={{headerShown: false}}/>
         <Stack.Screen name="PlantListing" component={PlantListing} options={{headerShown: false}}/> 
         <Stack.Screen name="DashBoard" component={DashBoard} />
         <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
-        <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess}/>
+        <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess} options={{headerShown: false}}/>
         <Stack.Screen name="Settings" component={Settings}/>
       </Stack.Navigator>
     </NavigationContainer>
