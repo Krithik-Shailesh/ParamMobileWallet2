@@ -4,9 +4,10 @@ import {
     StyleSheet,
     Text,
     View,
-    FlatList
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
-import { Card, Title } from 'react-native-paper';
+import { Card, Title, Drawer } from 'react-native-paper';
 
 import First from '../../assets/svgIcons/100.svg'
 import Second from '../../assets/svgIcons/101.svg'
@@ -42,51 +43,51 @@ class AppListing extends Component {
     getAppIcons = (item) => {
         switch (item) {
             case 100:
-                return <First/>;
+                return <First />;
             case 101:
-                return <Second/>
+                return <Second />
             case 102:
-                return <Third/>
+                return <Third />
             case 103:
-                return <Fourth/>
+                return <Fourth />
             case 104:
-                return <Fifth/>
+                return <Fifth />
             case 105:
-                return <Sixth/>
+                return <Sixth />
             case 106:
-                return <Seventh/>
+                return <Seventh />
             case 107:
-                return <Eighth/>
+                return <Eighth />
             case 108:
-                return <Nineth/>
+                return <Nineth />
             case 109:
-                return <Tenth/>
+                return <Tenth />
             case 110:
-                return <Eleventh/>
+                return <Eleventh />
             case 111:
-                return <Twelth/>
+                return <Twelth />
             case 112:
-                return <Thirteenth/>
+                return <Thirteenth />
             case 113:
-                return <Fourteen/>
+                return <Fourteen />
             case 114:
-                return <Fifteen/>
+                return <Fifteen />
             case 115:
-                return <Sixteen/>
+                return <Sixteen />
             case 120:
-                return <Twenty/>
+                return <Twenty />
             case 121:
-                return <TwentyOne/>
+                return <TwentyOne />
             case 122:
-                return <TwentyTwo/>
+                return <TwentyTwo />
             case 123:
-                return <TwentyThree/>
+                return <TwentyThree />
             case 124:
-                return <TwentyFour/>
+                return <TwentyFour />
             case 115:
-                return <Sixteen/>
+                return <Sixteen />
             default:
-                return <First/>
+                return <First />
         }
     }
 
@@ -117,37 +118,53 @@ class AppListing extends Component {
                 }
             }
         })
-        console.log(index)
         return index;
     }
 
     renderCard = (item) => {
         let Icon = this.getAppIcons(item.Props.Icon)
+        let cardColor = item.Props.BgColor
         return (
-            <Card style={{padding: 2, marginVertical: 10,marginHorizontal: 20, maxWidth: 135, minWidth: 135, maxHeight: 135, minHeight: 135}}>
-        
-                <Card.Content style={{alignItems: 'center', marginBottom: "4%"}}>
-                    {Icon}
-                </Card.Content>
-                <Text style={{textAlign: 'center'}}>{item.Name}</Text>
-            </Card>
+            <TouchableOpacity onPress={() => { console.log("Pressed", item.Name) }}>
+                <Card elevation={0} style={{ ...styles.card, backgroundColor: cardColor }}>
+                    <Card.Content style={styles.cardContent}>
+                        {Icon}
+                    </Card.Content>
+                    <Text style={{ textAlign: 'center' }}>{item.Name}</Text>
+                </Card>
+            </TouchableOpacity>
         )
     }
     render() {
         let apps = this.state.appInfo ? this.state.appInfo : []
         return (
-            <View>
-                <View style={{justifyContent:'space-between'}}>
-                <FlatList style={{ margin: 10 }}
-                    data={apps}
-                    numColumns={2}
-                    keyExtractor={item => item["_id"]}
-                    renderItem={({ item }) => this.renderCard(item)}
-                />
+            <View >
+                <View style={{ alignSelf: 'center' }}>
+                    <FlatList
+                        data={apps}
+                        numColumns={2}
+                        keyExtractor={item => item["_id"]}
+                        renderItem={({ item }) => this.renderCard(item)}
+                    />
                 </View>
+                
             </View>
         )
     }
 }
 
+const styles = StyleSheet.create({
+    card: {
+        padding: 2,
+        marginVertical: 20,
+        marginHorizontal: 20,
+        maxWidth: 135,
+        minWidth: 135, maxHeight: 135,
+        minHeight: 135
+    },
+    cardContent: {
+        alignItems: 'center',
+        marginBottom: "4%"
+    }
+})
 export default AppListing;

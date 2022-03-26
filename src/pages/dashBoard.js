@@ -7,9 +7,10 @@ import {
     Button,
     TextInput,
     ScrollView,
-    Image
+    Image,
+    Pressable
 } from 'react-native';
-import { BottomNavigation } from 'react-native-paper';
+import { BottomNavigation, Drawer } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
 import ParamConnector from '../libs/connector';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -33,11 +34,14 @@ class DashBoard extends Component {
             apps: [],
             index: 0,
             routes: [],
-            data: []
+            data: [],
+            active: false
         }
     }
 
     componentDidMount() {
+        let token = Utils.getFromStorage('otpToken')
+        Utils.setToStorage('sessionToken',token)
         this.getApps().then(res => {
             this.getProfile()
         }).then(() => {
@@ -45,6 +49,11 @@ class DashBoard extends Component {
         })
     }
 
+    setActive = (bool) => {
+        this.setState({
+            active: bool
+        })
+    }
     getProfile = () => {
         let email = Utils.getFromStorage("email")
 
@@ -106,10 +115,11 @@ class DashBoard extends Component {
 
 
     setIndex = (index) => {
-        console.log(index)
+
         this.setState({
             index: index
         })
+
     }
 
 
@@ -164,10 +174,13 @@ class DashBoard extends Component {
         let name = Utils.getFromStorage(Settings.orgName)
         return (
             <SafeAreaView style={{ flex: 1 }}>
-                <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
-                    <MaterialCommunityIcons name="menu" size={30}/>
-                    <ParamLogo/>
-                    <MaterialCommunityIcons name="bell" size={25}/>
+                <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'space-between' }}>
+                    <Pressable onPress={() => { this.setActive(true) }}><MaterialCommunityIcons name="menu" size={30} /></Pressable>
+                    <ParamLogo />
+                    <View style={{flexDirection: 'row'}}>
+                        <Pressable onPress={() => {Utils.clearStorage(), this.props.navigation.navigate('SignOut')}}style={{marginRight: 10}}><MaterialCommunityIcons name="logout" size={25}/></Pressable>
+                        <MaterialCommunityIcons name="bell" size={25} />
+                    </View>
                 </View>
                 <View style={{ margin: 10, backgroundColor: "#F6F6F6", justifyContent: 'space-between', flexDirection: 'row', padding: 10, alignItems: 'center' }}>
                     <View><Text style={styles.name}>{name}</Text></View>

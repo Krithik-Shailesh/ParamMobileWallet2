@@ -119,6 +119,10 @@ class PlantListing extends Component {
         })
     }
 
+    goBack = () => {
+        this.props.navigation.goBack(null)
+    }
+
     render() {
         let data = this.state.allPlants ? this.state.allPlants : []
         let penID = this.state.data && this.state.data[0] && this.state.data[0]["C_PenID"] ? this.state.data[0]["C_PenID"] : <></>
@@ -128,7 +132,7 @@ class PlantListing extends Component {
         let name = Utils.getFromStorage(Settings.orgName)//this.state.data && this.state.data[0] && this.state.data[0].Profile["P_LegalName"] ? this.state.data[0].Profile["P_LegalName"] : <></>
         return (
             <SafeAreaView>
-                <LoginComponent />
+                <LoginComponent goBack={this.goBack}/>
 
                 <SafeAreaView style={{ alignItems: 'center' }}>
                     <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
@@ -149,19 +153,19 @@ class PlantListing extends Component {
                 </List.Section>
                 <View style={{...style.divider}} />
                 <View style={{ marginBottom: 40, marginHorizontal: 26 }}><Button style={{ height: 50, justifyContent: "center", backgroundColor: "#542493" }} mode="contained" onPress={() => { this.props.navigation.navigate('RequestForAccess', { plantLocation: this.state.location}) }} >Continue</Button></View>
-
+                <View style={{...style.footerContainer}}>
+                    <Text style={style.footer}>Registration means that you agree to</Text>
+                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
+                </View>
                 {/* {this.state.modal === true ? <PlantModal title ="Choose a Plant" data={this.allPlants} open={this.state.modal}/> : <></>} */}
                 <PlantModal
-                    title="Choose a Plant"
+                    title="Choose your plant"
                     data={data}
                     open={this.state.modal}
                     updateModalState={this.updateModalState}
                     selectedPlant={this.updateSelectedPlant}
                 />
-                <View style={{...style.footerContainer}}>
-                    <Text style={style.footer}>Registration means that you agree to</Text>
-                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
-                </View>
+                
             </SafeAreaView>
 
         )

@@ -14,10 +14,15 @@ class RequesForAccessSuccess extends Component {
     constructor(props) {
         super(props)
     }
+
+    goBack = () => {
+        this.props.navigation.goBack(null)
+    }
+
     render() {
         return (
             <SafeAreaView>
-                <LoginComponent />
+                <LoginComponent goBack={this.goBack} />
                 <SafeAreaView style={{ alignItems: 'center', marginBottom: 30 }}>
                     <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
                         <View style={style.avatar}><EmailLogo /></View>

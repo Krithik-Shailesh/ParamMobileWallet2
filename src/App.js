@@ -16,12 +16,12 @@ import KeystoreUtils from './libs/services/keystore/utils.js';
 import Storage from './libs/storage/utilities.js';
 
 import SignIn from './pages/signIn';
-import verifyOtp from './pages/verifyOtp';
 import DashBoard from './pages/dashBoard';
 import RequestForAccess from './pages/requestForAccess';
 import RequestForAccessSuccess from './pages/requestForAccessSuccess.js';
 import Settings from './pages/settings.js';
 import PlantListing from './pages/plantListing.js';
+import Utils from './libs/utilities/index.js';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +32,7 @@ class App extends Component {
     this.state = {
       token: ""
     }
-    this.store = Storage.getInstance()
+    
   }
 
   componentDidMount() {
@@ -40,7 +40,7 @@ class App extends Component {
   }
 
   validToken = () => {
-    let token = this.store.getFromStorage('otpToken') ? this.store.getFromStorage('otpToken') : ""
+    let token = Utils.getFromStorage('sessionToken') ? Utils.getFromStorage('sessionToken') : ""
     if(token != ""){
       KeystoreUtils.getValidToken(token).then(res => {
         if(res.token) {
@@ -61,13 +61,12 @@ class App extends Component {
         <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
         ):
         ( 
-
         <Stack.Screen name="DirectDashBoard" component={DashBoard} options={{headerShown: false}}/>
         )
         }
         <Stack.Screen name="SignOut" component={SignIn} options={{headerShown: false}}/>
         <Stack.Screen name="PlantListing" component={PlantListing} options={{headerShown: false}}/> 
-        <Stack.Screen name="DashBoard" component={DashBoard} />
+        <Stack.Screen name="DashBoard" component={DashBoard} options={{headerShown: false}}/>
         <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
         <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess} options={{headerShown: false}}/>
         <Stack.Screen name="Settings" component={Settings}/>

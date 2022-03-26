@@ -83,11 +83,15 @@ class RequestForAccess extends Component {
         return `${username[0]}${new Array(username.length).join("*")}@${userdomain}`;
     }
 
+    goBack = () => {
+        this.props.navigation.goBack(null)
+    }
+
     render() {
 
         return (
             <SafeAreaView>
-                <LoginComponent />
+                <LoginComponent goBack={this.goBack}/>
                 <SafeAreaView style={{ alignItems: 'center' }}>
                     <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
                         <View style={style.avatar}><EmailLogo/></View>

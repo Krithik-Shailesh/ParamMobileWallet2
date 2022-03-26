@@ -6,21 +6,23 @@ import {
     Pressable,
     Dimensions,
     StyleSheet,
-    Modal,
     TouchableOpacity,
-    FlatList
+    FlatList,
 } from 'react-native';
+import Modal from 'react-native-modal'
 import { TextInput, Button, Divider } from 'react-native-paper';
 import Item from './item';
 
+const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height
 class PlantModal extends Component {
     constructor(props) {
         super(props)
         this.state = {
             modal: false,
-            
+
         }
-       
+
     }
 
     setLocation = (location) => {
@@ -28,7 +30,7 @@ class PlantModal extends Component {
     }
 
     setModalState = () => {
-        
+
         this.props.updateModalState(false)
     }
 
@@ -48,23 +50,25 @@ class PlantModal extends Component {
 
         return (
             <Modal
-                animated
-                animationType="slide"
-                transparent={true}
-                visible={this.props.open}
-                onRequestClose={() => {
-                    // this.closeButtonFunction()
-                }}>
+                style={{ margin: 0 }}
+                isVisible={this.props.open}
+                coverScreen={true}
+                swipeDirection="down"
+                onSwipeComplete={() => { this.setModalState() }}
+                onBackdropPress={() => { this.setModalState() }}
+            >
                 <View
                     style={{
                         height: '50%',
                         marginTop: 'auto',
                         backgroundColor: 'white'
                     }}>
+                     <View style={{alignItems: 'center', marginTop: "4%"}}><View style={{backgroundColor: "#9B9B9B", width: 125, height: 5, borderRadius: 2}}></View></View>   
                     <View style={{ marginLeft: 17, marginTop: 26 }}>
-                        <View style = {{flexDirection: 'row', justifyContent: 'space-between'}}>
-                        <View><Text style={styles.title}>{this.props.title}</Text></View>
-                        <Pressable style={{marginRight: 15}}onPress={() => {this.setModalState()}}><Text>Close</Text></Pressable>
+                        
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        
+                            <View><Text style={styles.title}>{this.props.title}</Text></View>
                         </View>
                         <FlatList
                             data={Data}
@@ -85,7 +89,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontFamily: "Montserrat-Bold",
-        color: "#0D0D0D"
+        color: "#0D0D0D",
+        fontSize: 18
     }
 
 });
