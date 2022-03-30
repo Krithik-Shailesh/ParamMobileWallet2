@@ -5,7 +5,7 @@ import {
     Text,
     StyleSheet
 } from 'react-native';
-import { Button, List } from 'react-native-paper';
+import { Button, List, ActivityIndicator } from 'react-native-paper';
 import ParamConnector from '../libs/connector';
 import Utils from '../libs/utilities';
 import Settings from '../../settings.json';
@@ -132,30 +132,37 @@ class PlantListing extends Component {
         let name = Utils.getFromStorage(Settings.orgName)//this.state.data && this.state.data[0] && this.state.data[0].Profile["P_LegalName"] ? this.state.data[0].Profile["P_LegalName"] : <></>
         return (
             <SafeAreaView>
-                <LoginComponent goBack={this.goBack}/>
+                <LoginComponent goBack={this.goBack} />
+                <View style={{ marginLeft: 20, marginRight: 20 }}>
+                    <SafeAreaView style={{ alignItems: 'center' }}>
+                        <View style={{ ...styles.avatarContainer, marginTop: 30, marginHorizontal: 127 }}>
+                            <View>
+                                {!penID1 > 0 ? <ActivityIndicator animating={this.penID1} color={"#E6DBFF"} /> :
+                                    <View>
+                                        <Text style={styles.avatar}>{penID1 && convertToDoubleStruck(penID1)}</Text>
+                                        <Text style={styles.avatar}>{penID2 && convertToDoubleStruck(penID2)}</Text>
+                                    </View>
+                                }
+                            </View>
+                        </View>
+                        {!name  ? <ActivityIndicator animating={this.name} color={"#E6DBFF"} /> : <View><Text style={styles.name}>{name}</Text></View>}
+                    </SafeAreaView>
 
-                <SafeAreaView style={{ alignItems: 'center' }}>
-                    <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
-                        <Text style={style.avatar}>{penID1 && convertToDoubleStruck(penID1)}</Text>
-                        <Text style={style.avatar}>{penID2 && convertToDoubleStruck(penID2)}</Text>
+                    <List.Section style={styles.select}>
+                        <List.Accordion
+                            titleStyle={styles.accordianTitle}
+                            title={this.state.location ? this.state.location : "Choose a Plant"}
+                            style={{ padding: 15, color: '#484848' }}
+                            onPress={this.toggleModal}
+                        >
+                        </List.Accordion>
+                    </List.Section>
+                    <View style={{ ...styles.divider }} />
+                    <View style={{ marginBottom: 40 }}><Button style={{ height: 50, justifyContent: "center", backgroundColor: "#542493" }} mode="contained" onPress={() => { this.props.navigation.navigate('RequestForAccess', { plantLocation: this.state.location }) }} >Continue</Button></View>
+                    <View style={{ ...styles.footerContainer }}>
+                        <Text style={styles.footer}>Registration means that you agree to</Text>
+                        <Text style={styles.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
                     </View>
-                    <View><Text style={style.name}>{name}</Text></View>
-                </SafeAreaView>
-
-                <List.Section style={style.select}>
-                    <List.Accordion
-                        titleStyle={style.accordianTitle}
-                        title={this.state.location ? this.state.location : "Choose a Plant"}
-                        style={{ padding: 15, color: '#484848' }}
-                        onPress={this.toggleModal}
-                    >
-                    </List.Accordion>
-                </List.Section>
-                <View style={{...style.divider}} />
-                <View style={{ marginBottom: 40, marginHorizontal: 26 }}><Button style={{ height: 50, justifyContent: "center", backgroundColor: "#542493" }} mode="contained" onPress={() => { this.props.navigation.navigate('RequestForAccess', { plantLocation: this.state.location}) }} >Continue</Button></View>
-                <View style={{...style.footerContainer}}>
-                    <Text style={style.footer}>Registration means that you agree to</Text>
-                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
                 </View>
                 {/* {this.state.modal === true ? <PlantModal title ="Choose a Plant" data={this.allPlants} open={this.state.modal}/> : <></>} */}
                 <PlantModal
@@ -165,14 +172,13 @@ class PlantListing extends Component {
                     updateModalState={this.updateModalState}
                     selectedPlant={this.updateSelectedPlant}
                 />
-                
             </SafeAreaView>
 
         )
     }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     avatarContainer: {
         justifyContent: 'center',
         alignItems: 'center',
@@ -198,10 +204,10 @@ const style = StyleSheet.create({
     },
     select: {
         color: "#9F84C2",
-        marginTop: 30,
+        marginTop: 20,
         marginBottom: 60,
         borderRadius: 5,
-        marginHorizontal: 34,
+        marginHorizontal: 10,
         borderColor: "#9F84C2",
         borderWidth: 2,
         height: 78,
@@ -210,7 +216,6 @@ const style = StyleSheet.create({
     divider: {
         borderBottomColor: "#C4C4C4",
         borderBottomWidth: 0.2,
-        marginHorizontal: 26,
         marginBottom: 26
     },
     footer: {
@@ -221,12 +226,12 @@ const style = StyleSheet.create({
         alignItems: 'center',
         left: 0,
         right: 0,
-        bottom: "5%",
+        bottom: "2%",
         marginTop: "20%"
     },
-    accordianTitle: { 
-        fontFamily: "Montserrat-Regular", 
-        color: '#484848' 
+    accordianTitle: {
+        fontFamily: "Montserrat-Regular",
+        color: '#484848'
     }
 
 })

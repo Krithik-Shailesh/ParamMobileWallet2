@@ -45,6 +45,10 @@ class RequestForAccess extends Component {
 
     onButtonPress = () => {
 
+        this.setState({
+            loading: true
+        })
+
         const selectedPlant = Utils.getFromStorage(Settings.selectedPlant)
         const selectedPlantDetails = Utils.getFromStorage(selectedPlant['ID'])
         
@@ -52,6 +56,7 @@ class RequestForAccess extends Component {
             return;
         }
 
+        
         let request = [], options = {}
         let email = Utils.getFromStorage('email')
         let taxID = selectedPlantDetails['taxID'] || ""
@@ -93,30 +98,30 @@ class RequestForAccess extends Component {
             <SafeAreaView>
                 <LoginComponent goBack={this.goBack}/>
                 <SafeAreaView style={{ alignItems: 'center' }}>
-                    <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
-                        <View style={style.avatar}><EmailLogo/></View>
+                    <View style={{ ...styles.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
+                        <View style={styles.avatar}><EmailLogo/></View>
                     </View>
-                    <View ><Text style={style.name}>Request For Access</Text></View>
+                    <View ><Text style={styles.name}>Request For Access</Text></View>
                     <View style={{marginTop: 40}}>
                         <Text style={{fontFamily: "Montserrat-Regular", fontSize: 16, color: "#484848"}}>{Utils.getFromStorage('email')}</Text>
                     </View>
-                    <Text style={{...style.content, marginTop: 20}}>{'Your Email Id Is Not'}</Text>
-                    <Text style={style.content}>{'Registered'}</Text>
+                    <Text style={{...styles.content, marginTop: 20}}>{'Your Email Id Is Not'}</Text>
+                    <Text style={styles.content}>{'Registered'}</Text>
                 </SafeAreaView>
 
-                <View style={{...style.divider, marginTop: 34}} />
-                <View style={style.buttonContainer}>
-                    <Button style={style.button} mode="contained" onPress={() => {this.onButtonPress()}} >Request For Access</Button></View>
-                <View style={style.footerContainer}>
-                    <Text style={style.footer}>Registration means that you agree to</Text>
-                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
+                <View style={{...styles.divider, marginTop: 34}} />
+                <View style={styles.buttonContainer}>
+                    <Button style={styles.button} mode="contained" onPress={() => {this.onButtonPress()}} loading={this.state.loading}>{this.state.loading ? "" : "Request For Access"}</Button></View>
+                <View style={styles.footerContainer}>
+                    <Text style={styles.footer}>Registration means that you agree to</Text>
+                    <Text style={styles.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
                 </View>
             </SafeAreaView>
         )
     }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     avatarContainer: {
         justifyContent: 'center',
         alignItems: 'center',

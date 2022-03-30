@@ -16,9 +16,10 @@ import KeystoreUtils from './libs/services/keystore/utils.js';
 import Storage from './libs/storage/utilities.js';
 
 import SignIn from './pages/signIn';
-import DashBoard from './pages/dashBoard';
 import RequestForAccess from './pages/requestForAccess';
 import RequestForAccessSuccess from './pages/requestForAccessSuccess.js';
+import DashBoard from './pages/DashBoard/dashBoard';
+import DocListing from './pages/Listing/docListing.js';
 import Settings from './pages/settings.js';
 import PlantListing from './pages/plantListing.js';
 import Utils from './libs/utilities/index.js';
@@ -66,9 +67,10 @@ class App extends Component {
         }
         <Stack.Screen name="SignOut" component={SignIn} options={{headerShown: false}}/>
         <Stack.Screen name="PlantListing" component={PlantListing} options={{headerShown: false}}/> 
-        <Stack.Screen name="DashBoard" component={DashBoard} options={{headerShown: false}}/>
         <Stack.Screen name="RequestForAccess" component={RequestForAccess} options={{headerShown: false}}/>
         <Stack.Screen name="ReqAccessSuccess" component={RequestForAccessSuccess} options={{headerShown: false}}/>
+        <Stack.Screen name="DashBoard" component={DashBoard} options={{headerShown: false}}/>
+        <Stack.Screen name="DocListing" component={DocListing} options={{headerShown: false}} />   
         <Stack.Screen name="Settings" component={Settings}/>
       </Stack.Navigator>
     </NavigationContainer>

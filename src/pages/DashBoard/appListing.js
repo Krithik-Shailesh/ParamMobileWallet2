@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { Component } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,28 +8,29 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { Card, Title, Drawer } from 'react-native-paper';
+import Utils from '../../libs/utilities';
 
-import First from '../../assets/svgIcons/100.svg'
-import Second from '../../assets/svgIcons/101.svg'
-import Third from '../../assets/svgIcons/102.svg'
-import Fourth from '../../assets/svgIcons/103.svg'
-import Fifth from '../../assets/svgIcons/104.svg'
-import Sixth from '../../assets/svgIcons/105.svg'
-import Seventh from '../../assets/svgIcons/106.svg'
-import Eighth from '../../assets/svgIcons/107.svg'
-import Nineth from '../../assets/svgIcons/108.svg'
-import Tenth from '../../assets/svgIcons/109.svg'
-import Eleventh from '../../assets/svgIcons/110.svg'
-import Twelth from '../../assets/svgIcons/111.svg'
-import Thirteenth from '../../assets/svgIcons/112.svg'
-import Fourteen from '../../assets/svgIcons/113.svg'
-import Fifteen from '../../assets/svgIcons/114.svg'
-import Sixteen from '../../assets/svgIcons/115.svg'
-import Twenty from '../../assets/svgIcons/120.svg'
-import TwentyOne from '../../assets/svgIcons/121.svg'
-import TwentyTwo from '../../assets/svgIcons/122.svg'
-import TwentyThree from '../../assets/svgIcons/123.svg'
-import TwentyFour from '../../assets/svgIcons/124.svg'
+import First from '../../../assets/svgIcons/100.svg'
+import Second from '../../../assets/svgIcons/101.svg'
+import Third from '../../../assets/svgIcons/102.svg'
+import Fourth from '../../../assets/svgIcons/103.svg'
+import Fifth from '../../../assets/svgIcons/104.svg'
+import Sixth from '../../../assets/svgIcons/105.svg'
+import Seventh from '../../../assets/svgIcons/106.svg'
+import Eighth from '../../../assets/svgIcons/107.svg'
+import Nineth from '../../../assets/svgIcons/108.svg'
+import Tenth from '../../../assets/svgIcons/109.svg'
+import Eleventh from '../../../assets/svgIcons/110.svg'
+import Twelth from '../../../assets/svgIcons/111.svg'
+import Thirteenth from '../../../assets/svgIcons/112.svg'
+import Fourteen from '../../../assets/svgIcons/113.svg'
+import Fifteen from '../../../assets/svgIcons/114.svg'
+import Sixteen from '../../../assets/svgIcons/115.svg'
+import Twenty from '../../../assets/svgIcons/120.svg'
+import TwentyOne from '../../../assets/svgIcons/121.svg'
+import TwentyTwo from '../../../assets/svgIcons/122.svg'
+import TwentyThree from '../../../assets/svgIcons/123.svg'
+import TwentyFour from '../../../assets/svgIcons/124.svg'
 
 class AppListing extends Component {
     constructor(props) {
@@ -124,13 +125,19 @@ class AppListing extends Component {
     renderCard = (item) => {
         let Icon = this.getAppIcons(item.Props.Icon)
         let cardColor = item.Props.BgColor
+        let app = this.state.appInfo
+        Utils.setToStorage(item.smID, item)
+        let marginBottom = item === app[app.length-1] ? 40 : 0
+
         return (
-            <TouchableOpacity onPress={() => { console.log("Pressed", item.Name) }}>
+            <TouchableOpacity style={{ marginTop: 40, marginBottom: marginBottom}} onPress={() => this.props.navigateToDocListing( {segment: this.props.content,appName: item.Name, appInfo: item, stateTo: item.StartAt})}>
                 <Card elevation={0} style={{ ...styles.card, backgroundColor: cardColor }}>
-                    <Card.Content style={styles.cardContent}>
-                        {Icon}
-                    </Card.Content>
-                    <Text style={{ textAlign: 'center' }}>{item.Name}</Text>
+                    <View style={{ flex: 1, justifyContent: 'space-evenly' }}>
+                        <Card.Content style={styles.cardContent}>
+                            {Icon}
+                        </Card.Content>
+                        <Text style={{ textAlign: 'center', fontFamily: "Montserrat-Regular" }}>{item.Name}</Text>
+                    </View>
                 </Card>
             </TouchableOpacity>
         )
@@ -147,7 +154,7 @@ class AppListing extends Component {
                         renderItem={({ item }) => this.renderCard(item)}
                     />
                 </View>
-                
+
             </View>
         )
     }
@@ -156,15 +163,19 @@ class AppListing extends Component {
 const styles = StyleSheet.create({
     card: {
         padding: 2,
-        marginVertical: 20,
         marginHorizontal: 20,
         maxWidth: 135,
-        minWidth: 135, maxHeight: 135,
+        minWidth: 135,
+        maxHeight: 135,
         minHeight: 135
     },
+    'card:last-child': {
+        marginBottom: 10,
+        backgroundColor: 'blue',
+        color: 'blue'
+    },
     cardContent: {
-        alignItems: 'center',
-        marginBottom: "4%"
+        alignItems: 'center'
     }
 })
 export default AppListing;

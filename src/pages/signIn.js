@@ -5,9 +5,10 @@ import {
   Text,
   Dimensions,
   StyleSheet,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Pressable
 } from 'react-native';
-import { TextInput, Button, Divider } from 'react-native-paper';
+import { TextInput, Button, Divider, ActivityIndicator } from 'react-native-paper';
 import ParamConnector from '../libs/connector';
 import Storage from '../libs/storage/utilities';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -17,6 +18,9 @@ import SplashScreen from 'react-native-splash-screen'
 import Logo from '../../assets/logo.svg'
 import * as Style from '../styles/index'
 import { ScrollView } from 'react-native-gesture-handler';
+import Utils from '../libs/utilities';
+import settings from '../../settings.json'
+import CustomModal from '../components/customModal';
 
 const aesctr = require('../libs/utilities/aes-ctr')
 const crypto = require('crypto')
@@ -38,10 +42,10 @@ class SignIn extends Component {
       errorOtp: false,
       timer: 59,
       resend: false,
-      directLogin: false
+      directLogin: false,
+      loading: false,
+      termsAndCondition: false
     }
-    //this.onButtonPress = this.onButtonPress.bind(this)
-    this.store = Storage.getInstance()
 
   }
 
@@ -82,15 +86,15 @@ class SignIn extends Component {
   }
 
   sendOTP = () => {
-    let Store = this.store
     let email = this.state.email
     email = email.toLowerCase().trim();
+
     this.countDown()
     this.setState({
-      resend: true
-    })
+      resend: true,
 
-    Store.setToStorage('emailID', email)
+    })
+    Utils.setToStorage('emailID', email)
     return ParamConnector.getInstance().getKeyStoreService().sendOTP(email)
       .then(res => {
         // this.props.navigation.navigate('VerifyOTP',{email: email})
@@ -100,7 +104,7 @@ class SignIn extends Component {
   }
 
   reSendOTP = () => {
-    let Store = this.store
+    let Utils = this.store
     let email = this.state.email
     email = email.toLowerCase().trim();
     this.setState({
@@ -108,7 +112,7 @@ class SignIn extends Component {
     })
 
 
-    Store.setToStorage('emailID', email)
+    Utils.setToStorage('emailID', email)
     return ParamConnector.getInstance().getKeyStoreService().sendOTP(email)
       .then(res => {
         // this.props.navigation.navigate('VerifyOTP',{email: email})
@@ -118,14 +122,31 @@ class SignIn extends Component {
   }
 
   verifyOTP = () => {
-    let Store = this.store
 
     let email = this.state.email;
     email = email.toLowerCase().trim();
     let OTP = this.state.otp;
     let isTermsAndConditionVerified = true;
 
+    if (email.length === 0 || OTP.length === 0) {
+      this.setState({
+        resend: true,
+        errorOtp: true
+      })
+      return
+    }
+    this.setState({
+      loading: true,
+
+    })
     return ParamConnector.getInstance().getKeyStoreService().verifyOTP(email, OTP, isTermsAndConditionVerified).then(res => {
+
+      if (res.status === false) {
+        this.setState({
+          errorOtp: true,
+          lodaing: false
+        })
+      }
 
       if (res.status) {
 
@@ -144,7 +165,7 @@ class SignIn extends Component {
         let domains = decryptedData.domains ? decryptedData.domains : []
         let appID = Config.appKey;
         let domainIndex = 0, currentApp = {}, currentDomain = {};
-        let selectedPlant = Store.getFromStorage("selectedPlant")
+        let selectedPlant = Utils.getFromStorage("selectedPlant")
         // if (appID !== "") {
         for (let index in response) {
           if (response[index].appID === appID) {
@@ -172,14 +193,14 @@ class SignIn extends Component {
 
         let authToken = response && response[domainIndex] && response[domainIndex].token.toString() ? response[domainIndex].token.toString() : ""
         let refreshToken = response && response[domainIndex] && response[domainIndex].refreshToken.toString() ? response[domainIndex].refreshToken.toString() : ""
-        Store.setToStorage('profile', response)
-        Store.setToStorage('email', email)
-        Store.setToStorage('domains', domains)
-        Store.setToStorage('otpToken', authToken)
-        Store.setToStorage('otpRefreshToken', refreshToken)
-        Store.setToStorage("appName", currentApp.name)
-        Store.setToStorage('showMeta', true)
-        Store.setToStorage('role', response[0].role)
+        Utils.setToStorage(settings.profile, response)
+        Utils.setToStorage(settings.email, email)
+        Utils.setToStorage(settings.domains, domains)
+        Utils.setToStorage(settings.otpToken, authToken)
+        Utils.setToStorage(settings.otpRefreshToken, refreshToken)
+        Utils.setToStorage(settings.appName, currentApp.name)
+        Utils.setToStorage(settings.showMeta, true)
+        Utils.setToStorage(settings.role, response[0].role)
 
         // if (response && response[domainIndex] && response[domainIndex].taxInfo && response[domainIndex].taxInfo.length === 0) {
         // 	this.props.history.push({
@@ -196,7 +217,7 @@ class SignIn extends Component {
             })
           }
           let taxInfo = currentApp.taxInfo[0]
-          Store.setToStorage("taxID", currentApp.taxInfo[0].taxID)
+          Utils.setToStorage("taxID", currentApp.taxInfo[0].taxID)
           plants = taxInfo && taxInfo.plants && taxInfo.plants[0] ? taxInfo.plants[0] : null
           if (plants) {
             let ethID = ""
@@ -211,9 +232,9 @@ class SignIn extends Component {
             if (plants.keyStore && plants.keyStore.privateKey) {
               privateKey = plants.keyStore.privateKey
             }
-            Store.setToStorage('paramID', ethID)
-            Store.setToStorage('privateKey', privateKey)
-            Store.setToStorage('publicKey', publicKey)
+            Utils.setToStorage(settings.paramID, ethID)
+            Utils.setToStorage(settings.privateKey, privateKey)
+            Utils.setToStorage(settings.publicKey, publicKey)
 
             let allPlants = []
             plants = taxInfo.plants ? taxInfo.plants : []
@@ -228,10 +249,10 @@ class SignIn extends Component {
               let plantObj = { name, ID, paramID, location: plantLocation }
               allPlants.push(plantObj)
               let plantCode = "" + plants[i].plantCode
-              Store.setToStorage(plantCode, plantObj)
+              Utils.setToStorage(plantCode, plantObj)
             }
-            Store.setToStorage('allPlants', allPlants)
-            Store.setToStorage('selectedPlant', allPlants[0])
+            Utils.setToStorage(settings.allPlants, allPlants)
+            Utils.setToStorage(settings.selectedPlant, allPlants[0])
           }
           else {
             let role = Storage.getInstance().getFromStorage('role')
@@ -269,12 +290,10 @@ class SignIn extends Component {
           })
         }
       }
-      else {
-        this.setState({
-          errorOtp: true
-        })
-      }
     }).catch(err => {
+      this.setState({
+        errorOtp: true
+      })
       console.log(err)
     }).then(res => {
 
@@ -292,60 +311,72 @@ class SignIn extends Component {
     })
 
   }
+
+  setTCModal = (bool) => {
+    this.setState({
+      termsAndCondition: bool
+    })
+  }
+
   render() {
     return (
-      <ScrollView>
-        <KeyboardAvoidingView style={styles.keyboardAvoidingView} behavior="padding" >
-          <SafeAreaView style={{ marginLeft: 20, marginRight: 20 }}>
-            <View style={{ ...styles.logo }}><Logo></Logo></View>
-            <View style={{ marginTop: "20%" }}>
-              <Text style={styles.welcomeText}>Welcome to </Text>
-              <Text style={styles.welcomeText}>⦃param⦄.network</Text>
+      <ScrollView contentContainerStyle={{ height: SCREEN_HEIGHT, flex: 1 }}>
+        <KeyboardAvoidingView style={{ ...styles.keyboardAvoidingView, marginLeft: 20, marginRight: 20, }} behavior="padding" >
+          <View style={{ ...styles.logo }}><Logo></Logo></View>
+          <View style={{ marginTop: "20%" }}>
+            <Text style={styles.welcomeText}>Welcome to </Text>
+            <Text style={styles.welcomeText}>⦃param⦄.network</Text>
+          </View>
+          <View style={{ marginTop: "20%" }}>
+            <TextInput
+              mode="outlined"
+              outlineColor="#9F84C2"
+              activeOutlineColor='#9F84C2'
+              focused={true}
+              style={{ borderRadius: 10, fontFamily: "Montserrat-Regular" }}
+              fontFamily="Montserrat-Regular"
+              theme={{ fonts: { regular: "" } }}
+              label={<Text style={{ fontFamily: "Montserrat-Regular" }}>Enter email id</Text>}
+              placeholder="AC@example.com"
+              onChangeText={(text) => this.changeEmailInputValue(text)}
+              onEndEditing={(text) => this.validEmail(text.nativeEvent.text)}
+              value={this.state.email}
+            />
+            {this.state.validEmail === false ? <Text style={{ color: "red" }}>Enter a valid email!</Text> : <></>}
+            <TextInput
+              mode="outlined"
+              outlineColor="#9F84C2"
+              activeOutlineColor='#9F84C2'
+              style={{ fontFamily: "Montserrat-Regular", marginTop: 20, borderRadius: 5 }}
+              fontFamily="Montserrat-Regular"
+              theme={{ fonts: { regular: "" } }}
+              label={<Text style={{ fontFamily: "Montserrat-Regular" }}>Enter OTP</Text>}
+              placeholder="OTP"
+              onChangeText={(text) => { this.changeOTPInputValue(text) }}
+              value={this.state.otp}
+              right={this.state.resend === false ? <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.sendOTP() }} /> : this.state.timer !== 0 ? <TextInput.Affix text={`${this.countDown()}`} textStyle={{ color: Style.primary_color }} /> : <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.reSendOTP() }} />}
+            />
+          </View>
+          {this.state.errorOtp === true ? <Text style={{ color: "red" }}>Invalid OTP!</Text> : <></>}
+          <View >
+            <View style={{ ...styles.divider, marginTop: 50 }} />
+            <View style={styles.buttonContainer}><Button style={styles.button} mode="contained" onPress={() => { this.verifyOTP() }} loading={this.state.loading} >{this.state.loading ? "" : "Login"}</Button></View>
+          </View>
+          <CustomModal
+            title="Terms & Conditions"
+            open={this.state.termsAndCondition}
+            data={Utils.getTermsAndCondition()}
+            setTCModal={this.setTCModal}
+          />
+          <Pressable onPress={() => { this.setState({ termsAndCondition: true }) }}>
+            <View style={styles.footerContainer}>
+              <Text style={styles.footerText}>Registration means that you agree to</Text>
+              <Text style={styles.footerText}>⦃param⦄.network User Agreement & User Privacy</Text>
             </View>
-            <View style={{ marginTop: "20%" }}>
-              <TextInput
-                mode="outlined"
-                outlineColor="#9F84C2"
-                activeOutlineColor='#9F84C2'
-                focused={true}
-                style={{ borderRadius: 10, fontFamily: "Montserrat-Regular" }}
-                fontFamily="Montserrat-Regular"
-                theme={{ fonts: { regular: "" } }}
-                label={<Text style={{ fontFamily: "Montserrat-Regular" }}>Enter email id</Text>}
-                placeholder="AC@example.com"
-                onChangeText={(text) => this.changeEmailInputValue(text)}
-                onEndEditing={(text) => this.validEmail(text.nativeEvent.text)}
-                value={this.state.email}
-              />
-              {this.state.validEmail === false ? <Text style={{ color: "red" }}>Enter a valid email!</Text> : <></>}
-              <TextInput
-                mode="outlined"
-                outlineColor="#9F84C2"
-                activeOutlineColor='#9F84C2'
-                style={{ fontFamily: "Montserrat-Regular", marginTop: 20, marginBottom: 44, borderRadius: 5 }}
-                fontFamily="Montserrat-Regular"
-                theme={{ fonts: { regular: "" } }}
-                label={<Text style={{ fontFamily: "Montserrat-Regular" }}>Enter OTP</Text>}
-                placeholder="OTP"
-                onChangeText={(text) => { this.changeOTPInputValue(text) }}
-                value={this.state.otp}
-                right={this.state.resend === false ? <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.sendOTP() }} /> : this.state.timer !== 0 ? <TextInput.Affix text={`00:${this.countDown()}`} textStyle={{ color: Style.primary_color }} /> : <TextInput.Icon name={() => <MaterialCommunityIcons name="send" size={30} color={Style.primary_color} />} style={{ marginRight: 20 }} onPress={() => { this.reSendOTP() }} />}
-              />
-            </View>
-            {this.state.errorOtp === true ? <Text style={{ color: "red" }}>Invalid OTP!</Text> : <></>}
-            <Divider style={{ color: "#EBEBEB" }} />
-            {/* <Text style={{ color: "#6200ee", marginTop: 30 }}>Didn't get a verification code?  <Text style={{ textDecorationLine: 'underline' }} onPress={() => { this.sendOTP() }}>Resend</Text></Text> */}
-            <View style={{flex: 1}}>
-              <View style={styles.buttonContainer}><Button style={styles.button} mode="contained" onPress={() => { this.verifyOTP() }} >Login</Button></View>
-              <View style={styles.footerContainer}>
-                <Text style={styles.footerText}>Registration means that you agree to</Text>
-                <Text style={styles.footerText}>⦃param⦄.network User Agreement & User Privacy</Text></View>
-            </View>
-          </SafeAreaView>
+          </Pressable>
+
         </KeyboardAvoidingView>
       </ScrollView>
-
-
     );
   }
 
@@ -357,8 +388,7 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold"
   },
   logo: {
-
-    marginTop: "20%"
+    marginTop: "15%"
   },
   welcomeText: {
     fontFamily: "Montserrat-Regular",
@@ -379,17 +409,20 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginTop: 26,
-    marginBottom: "10%"
+    marginBottom: "10%",
+    alignItems: 'center'
   },
   button: {
     height: 50,
+    width: SCREEN_WIDTH - 40,
     justifyContent: "center",
     backgroundColor: Style.primary_color
   },
   keyboardAvoidingView: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center'
+  },
+  divider: {
+    borderBottomColor: "#C4C4C4",
+    borderBottomWidth: 0.2
   }
 })
 

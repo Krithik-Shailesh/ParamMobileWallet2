@@ -10,7 +10,6 @@ import {
     FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal'
-import { TextInput, Button, Divider } from 'react-native-paper';
 import Item from './item';
 
 const deviceWidth = Dimensions.get("window").width;

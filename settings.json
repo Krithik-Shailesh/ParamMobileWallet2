@@ -8,6 +8,13 @@
     "orgName": "orgName",
     "selectedPlantName": "selectedPlantName",
     "selectedPlantLocation": "selectedPlantLocation",
-    "allPlantDetails": "allPlantDetails"
+    "allPlantDetails": "allPlantDetails",
+    "profile": "profile",
+    "email": "email",
+    "domains": "domains",
+    "otpToken": "otpToken",
+    "otpRefreshToken": "otpRefreshToken",
+    "showMeta": "showMeta",
+    "role": "role"
 }
   

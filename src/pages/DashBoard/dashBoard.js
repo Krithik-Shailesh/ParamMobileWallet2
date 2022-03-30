@@ -10,22 +10,22 @@ import {
     Image,
     Pressable
 } from 'react-native';
-import { BottomNavigation, Drawer } from 'react-native-paper';
+import { BottomNavigation, Drawer, withTheme } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import ParamConnector from '../libs/connector';
+import ParamConnector from '../../libs/connector';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Utils from '../libs/utilities';
-import { convertToDoubleStruck } from '../utils/fontstyle';
-import Settings from '../../settings.json';
+import Utils from '../../libs/utilities/index';
+import { convertToDoubleStruck } from '../../utils/fontstyle';
+import Settings from '../../../settings.json';
 
-import PurchasesLogo from '../../assets/purchases.svg'
-import SalesLogo from '../../assets/sales.svg'
-import AppLogo from '../../assets/apps.svg'
-import SettingsLogo from '../../assets/settings.svg'
-import ToolsLogo from '../../assets/tools.svg'
-import LogisticsLogo from '../../assets/logistics.svg'
+import PurchasesLogo from '../../../assets/purchases.svg'
+import SalesLogo from '../../../assets/sales.svg'
+import AppLogo from '../../../assets/apps.svg'
+import SettingsLogo from '../../../assets/settings.svg'
+import ToolsLogo from '../../../assets/tools.svg'
+import LogisticsLogo from '../../../assets/logistics.svg'
 import AppListing from './appListing';
-import ParamLogo from '../../assets/paramLogo.svg'
+import ParamLogo from '../../../assets/paramLogo.svg'
 class DashBoard extends Component {
 
     constructor(props) {
@@ -99,7 +99,6 @@ class DashBoard extends Component {
                         continue
                     }
                     let routeObj = {}
-                    routeObj.index = i
                     routeObj.key = apps[i].Name
                     routeObj.title = apps[i].Name
                     routeArr.push(routeObj)
@@ -131,19 +130,19 @@ class DashBoard extends Component {
                 return <AppListing content={'Settings'} />
 
             case 'Sales':
-                return <AppListing appInfo={this.state.apps} content={'Sales'} />;
+                return <AppListing appInfo={this.state.apps} content={'Sales'} navigateToDocListing={this.navigateToDocListing}/>;
 
             case 'Tools':
-                return <AppListing appInfo={this.state.apps} content={'Tools'} />;
+                return <AppListing appInfo={this.state.apps} content={'Tools'} navigateToDocListing={this.navigateToDocListing}/>;
 
             case 'Apps':
-                return <AppListing appInfo={this.state.apps} content={"Apps"} />
+                return <AppListing appInfo={this.state.apps} content={"Apps"} navigateToDocListing={ this.navigateToDocListing}/>
 
             case 'Logistics':
-                return <AppListing appInfo={this.state.apps} content={"Logistics"} />
+                return <AppListing appInfo={this.state.apps} content={"Logistics"} navigateToDocListing={this.navigateToDocListing}/>
 
             case 'Purchases':
-                return <AppListing appInfo={this.state.apps} content={"Purchases"} />
+                return <AppListing appInfo={this.state.apps} content={"Purchases"} navigateToDocListing={ this.navigateToDocListing}/>
 
         }
 
@@ -166,7 +165,12 @@ class DashBoard extends Component {
         }
     }
 
+    navigateToDocListing = (params) => {
+        this.props.navigation.navigate('DocListing',params)
+    }
+
     render() {
+        const fonts = this.props.theme
         let penID = this.state.data && this.state.data[0] && this.state.data[0]["C_PenID"] ? this.state.data[0]["C_PenID"] : <></>
 
         let penID1 = penID && penID.length > 0 && penID.substring(0, penID.length / 2)
@@ -197,7 +201,7 @@ class DashBoard extends Component {
                         onIndexChange={(index) => this.setIndex(index)}
                         renderScene={({ route, jumpTo }) => this.renderScene(route, jumpTo)}
                         renderIcon={({ route }) => this.renderIcon(route)}
-                        barStyle={{ backgroundColor: 'white' }}
+                        barStyle={{ backgroundColor: 'white', marginBottom: 5, justifyContent: 'center' }}
                     />
                     : <></>}
             </SafeAreaView>
@@ -229,4 +233,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DashBoard;
+export default withTheme(DashBoard);

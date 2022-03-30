@@ -24,25 +24,25 @@ class RequesForAccessSuccess extends Component {
             <SafeAreaView>
                 <LoginComponent goBack={this.goBack} />
                 <SafeAreaView style={{ alignItems: 'center', marginBottom: 30 }}>
-                    <View style={{ ...style.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
-                        <View style={style.avatar}><EmailLogo /></View>
+                    <View style={{ ...styles.avatarContainer, marginTop: 79, marginHorizontal: 127 }}>
+                        <View style={styles.avatar}><EmailLogo /></View>
                     </View>
-                    <View style={{ ...style.messageContainer, alignContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
-                        <Text style={style.name}>Request For Access</Text>
-                        <Text style={style.name}>Is Successful</Text>
+                    <View style={{ ...styles.messageContainer, alignContent: 'center', alignItems: 'center', alignSelf: 'center' }}>
+                        <Text style={styles.name}>Request For Access</Text>
+                        <Text style={styles.name}>Is Successful</Text>
                     </View>
                     <View style={{ marginTop: 20 }}>
                         <Text style={{ fontFamily: "Montserrat-Regular", fontSize: 16, color: "#484848" }}>{Utils.getFromStorage('email')}</Text>
                     </View>
-                    <View style={{ ...style.messageContainer, alignContent: 'center', alignItems: 'center', alignSelf: 'center', marginBottom: 60 }}>
-                        <Text style={style.message}>Please contact your administrator</Text>
-                        <Text style={style.message}>{`${Utils.getFromStorage('adminEmail')} for approval`}</Text>
+                    <View style={{ ...styles.messageContainer, alignContent: 'center', alignItems: 'center', alignSelf: 'center', marginBottom: 60 }}>
+                        <Text style={styles.message}>Please contact your administrator</Text>
+                        <Text style={styles.message}>{`${Utils.getFromStorage('adminEmail')} for approval`}</Text>
                     </View>
-                    <Pressable onPress={() => {Utils.clearStorage(), this.props.navigation.navigate('SignOut')}}><Text style={style.login}>Back To Login</Text></Pressable>
+                    <Pressable onPress={() => {Utils.clearStorage(), this.props.navigation.navigate('SignOut')}}><Text style={styles.login}>Back To Login</Text></Pressable>
                 </SafeAreaView>
-                <View style={style.footerContainer}>
-                    <Text style={style.footer}>Registration means that you agree to</Text>
-                    <Text style={style.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
+                <View style={styles.footerContainer}>
+                    <Text style={styles.footer}>Registration means that you agree to</Text>
+                    <Text style={styles.footer}>⦃param⦄.network User Agreement & User Privacy</Text>
                 </View>
             </SafeAreaView>
         )
@@ -50,7 +50,7 @@ class RequesForAccessSuccess extends Component {
 
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     avatarContainer: {
         justifyContent: 'center',
         alignItems: 'center',
